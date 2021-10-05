@@ -353,12 +353,34 @@ export default function setupInternalCommands(app: App): void {
     });
 
     app.commands.set("g", (args: string[]) => {
-        if (app.client.guilds.cache.has(args[0])) {
-            app.setActiveGuild(app.client.guilds.cache.get(args[0]) as Guild);
-        }
-        else {
-            app.message.system("Such guild does not exist");
-        }
+		
+		if (args[0] == "list") {
+			var guilds = app.client.guilds.cache.array();
+
+			for (var i of guilds) {
+				app.message.system(`${i.name} (${i.id})`);
+			}
+
+		} else if (!isNaN(parseInt(args[0]))) {
+			if (app.client.guilds.cache.has(args[0])) {
+				
+				app.setActiveGuild(app.client.guilds.cache.get(args[0]) as Guild);
+			}
+			else {
+				app.message.system("Such guild does not exist");
+			}
+		} else {
+			var guilds = app.client.guilds.cache.array();
+
+			for (var i of guilds) {
+				if (i.name == args.join(" ")) {
+					app.setActiveGuild(i);
+					return;
+				}
+			}
+
+			app.message.system("Such guild does not exist");
+		}
     });
 
     app.commands.set("reset", () => {

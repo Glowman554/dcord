@@ -21,7 +21,7 @@ export default class PluginManager {
                         pluginFolders.add(folder);
                     }
 
-                    resolve();
+                    resolve(-1);
                 });
             });
 
