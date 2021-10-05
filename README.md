@@ -165,5 +165,5 @@ Thanks to all these wonderful people for contributing to the project:
 
 - [x] Add support for better plugins
 - [x] Add support for crash logging
-- [ ] Add owoify support
+- [x] Add owoify support
 - [x] Add support pronounsdb
