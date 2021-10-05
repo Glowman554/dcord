@@ -163,8 +163,7 @@ Thanks to all these wonderful people for contributing to the project:
 
 ## Todo
 
-- [ ] Add support for better plugins
-- [ ] Add support for command reloading
+- [x] Add support for better plugins
 - [ ] Add support for crash logging
 - [ ] Add owoify support
-- [ ] Add support pronounsdb
+- [x] Add support pronounsdb

@@ -48,8 +48,8 @@ export default class MessageFactory {
         return this;
     }
 
-    public user(sender: string, message: string, modifiers: string[] = []): this {
-        let name: string = `@${sender}`;
+    public user(sender: string, message: string, pronoun: string, modifiers: string[] = []): this {
+        let name: string = `@${sender} (${pronoun})`;
 
         if (modifiers.length > 0) {
             for (let i: number = 0; i < modifiers.length; i++) {
@@ -62,14 +62,14 @@ export default class MessageFactory {
         return this;
     }
 
-    public self(name: string, message: string): this {
-        this.create(`@{bold}${name}{/bold}`, message, "cyan");
+    public self(name: string, message: string, pronoun: string,): this {
+        this.create(`@{bold}${name} (${pronoun}){/bold}`, message, "cyan");
 
         return this;
     }
 
-    public special(prefix: string, sender: string, message: string, color: string = "yellow"): this {
-        this.create(`${prefix} ~> @{bold}${sender}{/bold}`, message, color);
+    public special(prefix: string, sender: string, message: string, pronoun: string, color: string = "yellow"): this {
+        this.create(`${prefix} ~> @{bold}${sender}{/bold} (${pronoun})`, message, color);
 
         return this;
     }

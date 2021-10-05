@@ -16,6 +16,7 @@ import {defaultState} from "./state/stateConstants";
 import MessageFactory from "./core/messageFactory";
 import Tags from "./tags";
 import { PluginLoader } from "./plugin/loader";
+import { fetch_pronouns } from "./pronoundb";
 
 export type IAppNodes = {
     readonly messages: Widgets.BoxElement;
@@ -148,7 +149,7 @@ export default class App extends EventEmitter {
         return this;
     }
 
-    private handleMessage(msg: Message): void {
+    private async handleMessage(msg: Message): Promise<void> {
         if (msg.author.id === this.client.user.id) {
             this.state.update({
                 lastMessage: msg
@@ -159,7 +160,7 @@ export default class App extends EventEmitter {
             return;
         }
         else if (this.state.get().trackList.includes(msg.author.id)) {
-            this.message.special("Track", msg.author.tag, msg.content);
+            this.message.special("Track", msg.author.tag, msg.content, await fetch_pronouns(msg.author.id));
 
             return;
         }
@@ -184,10 +185,10 @@ export default class App extends EventEmitter {
 
         if (msg.author.id === this.client.user.id) {
             if (msg.channel.type === "text") {
-                this.message.self(this.client.user.tag, content);
+                this.message.self(this.client.user.tag, content, await fetch_pronouns(msg.author.id));
             }
             else if (msg.channel.type === "dm") {
-                this.message.special(`${chalk.green("=>")} DM`, (msg.channel as DMChannel).recipient.tag, content, "blue");
+                this.message.special(`${chalk.green("=>")} DM`, (msg.channel as DMChannel).recipient.tag, content, await fetch_pronouns((msg.channel as DMChannel).recipient.id), "blue");
             }
         }
         else if (this.state.get().guild && this.state.get().channel && msg.channel.id === this.state.get().channel.id) {
@@ -207,13 +208,13 @@ export default class App extends EventEmitter {
                 }
             }
 
-            this.message.user(msg.author.tag, content, modifiers);
+            this.message.user(msg.author.tag, content, await fetch_pronouns(msg.author.id), modifiers);
         }
         else if (msg.channel.type === "dm") {
-            this.message.special(`${chalk.green("<=")} DM`, msg.author.tag, content, "blue");
+            this.message.special(`${chalk.green("<=")} DM`, msg.author.tag, content, await fetch_pronouns(msg.author.id), "blue");
         }
         else if (this.state.get().globalMessages) {
-            this.message.special("Global", msg.author.tag, content);
+            this.message.special("Global", msg.author.tag, content, await fetch_pronouns(msg.author.id));
         }
     }
 
