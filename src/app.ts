@@ -15,6 +15,7 @@ import State, {IState, IStateOptions} from "./state/state";
 import {defaultState} from "./state/stateConstants";
 import MessageFactory from "./core/messageFactory";
 import Tags from "./tags";
+import { PluginLoader } from "./plugin/loader";
 
 export type IAppNodes = {
     readonly messages: Widgets.BoxElement;
@@ -72,6 +73,8 @@ export default class App extends EventEmitter {
 
     public readonly tags: Tags;
 
+	public pluginloader: PluginLoader;
+
     public constructor(options?: Partial<IAppOptions>, commands: Map<string, ICommandHandler> = new Map()) {
         super();
 
@@ -106,6 +109,9 @@ export default class App extends EventEmitter {
 
             this.showChannels();
             this.state.saveSync();
+
+			this.pluginloader = new PluginLoader(this);
+			this.pluginloader.load_all();
         });
 
         this.client.on("message", this.handleMessage.bind(this));
