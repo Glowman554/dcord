@@ -159,3 +159,12 @@ Thanks to all these wonderful people for contributing to the project:
 * [@anirudhbs](https://github.com/anirudhbs)
 * [@jellz](https://github.com/jellz)
 * [@JustCaptcha](https://github.com/JustCaptcha)
+
+
+## Todo
+
+- [ ] Add support for better plugins
+- [ ] Add support for command reloading
+- [ ] Add support for crash logging
+- [ ] Add owoify support
+- [ ] Add support pronounsdb
