@@ -4,3 +4,4 @@ dist/
 .env
 state.json
 package-lock.json
+crash

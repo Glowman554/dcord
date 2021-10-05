@@ -106,6 +106,20 @@ export default function setupInternalCommands(app: App): void {
         }
     });
 
+	app.commands.set("crash", () => {
+		throw new Error("owo whats this");
+	});
+
+	app.commands.set("crash-info", (args: string[]) => {
+		if (!args[0]) {
+			return;
+		}
+
+		var crash = app.read_crash(args[0]);
+		app.message.system(`Crash info for ${args[0]}`);
+		app.message.system(`${crash.stack}`);
+	});
+
     app.commands.set("encrypt", (args: string[]) => {
         if (!args[0]) {
             app.message.system("You must provide a password");

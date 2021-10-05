@@ -164,6 +164,6 @@ Thanks to all these wonderful people for contributing to the project:
 ## Todo
 
 - [x] Add support for better plugins
-- [ ] Add support for crash logging
+- [x] Add support for crash logging
 - [ ] Add owoify support
 - [x] Add support pronounsdb

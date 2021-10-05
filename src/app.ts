@@ -2,7 +2,7 @@ import {TextChannel, Guild, Client, Message, DMChannel, ClientOptions, GuildChan
 import Utils from "./utils";
 import blessed, {Widgets} from "blessed";
 import chalk from "chalk";
-import fs from "fs";
+import fs, { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import clipboardy from "clipboardy";
 import path from "path";
 import Encryption from "./encryption";
@@ -89,6 +89,8 @@ export default class App extends EventEmitter {
         this.commands = commands;
         this.message = new MessageFactory(this);
         this.tags = new Tags(this.state);
+
+		process.on("uncaughtException", this.on_crash.bind(this));
     }
 
     public async setup(init: boolean = true): Promise<this> {
@@ -148,6 +150,57 @@ export default class App extends EventEmitter {
 
         return this;
     }
+
+	public random_id(): string {
+		let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
+		// Pick characers randomly
+		let str = "";
+		for (let i = 0; i < 10; i++) {
+			str += chars.charAt(Math.floor(Math.random() * chars.length));
+		}
+	
+		return str;
+	}
+
+	private dump_crash(error: Error): string {
+		try {
+			const dump = {
+				stack: error.stack,
+			};
+	
+			var crash_id = this.random_id();
+	
+			if (!existsSync("./crash")) {
+				mkdirSync("./crash");
+			}
+	
+			writeFileSync("./crash/" + crash_id + ".json", JSON.stringify(dump, null, 4));
+		} catch (e) {
+			return "crash handler crashed";
+		}
+	
+		return crash_id;
+	}
+
+	public read_crash(crash_id: string): {
+		stack: string;
+	} {
+		try {
+			const dump = JSON.parse(readFileSync("./crash/" + crash_id + ".json", "utf8"));
+	
+			return dump;
+		} catch (e) {
+			return {
+				stack: "crash handler crashed",
+			};
+		}
+	}
+
+	private on_crash(error: Error): void {
+		const crash_id = this.dump_crash(error);
+		this.message.system("OMG something terrible happened D:\nThe crash id is " + crash_id + "\n" + error);
+	}
 
     private async handleMessage(msg: Message): Promise<void> {
         if (msg.author.id === this.client.user.id) {
